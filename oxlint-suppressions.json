@@ -288,19 +288,6 @@
       "count": 1
     }
   },
-  "web/app/components/app/log/index.tsx": {
-    "eslint-react/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "web/app/components/app/log/list.tsx": {
-    "eslint-react/set-state-in-effect": {
-      "count": 2
-    },
-    "typescript/no-explicit-any": {
-      "count": 3
-    }
-  },
   "web/app/components/app/log/var-panel.tsx": {
     "jsx-a11y/click-events-have-key-events": {
       "count": 2
@@ -690,22 +677,6 @@
   "web/app/components/base/markdown-blocks/video-block.tsx": {
     "typescript/no-explicit-any": {
       "count": 5
-    }
-  },
-  "web/app/components/base/mermaid/index.tsx": {
-    "jsx-a11y/click-events-have-key-events": {
-      "count": 1
-    },
-    "jsx-a11y/no-static-element-interactions": {
-      "count": 1
-    },
-    "regexp/no-super-linear-backtracking": {
-      "count": 3
-    }
-  },
-  "web/app/components/base/mermaid/utils.ts": {
-    "typescript/no-explicit-any": {
-      "count": 2
     }
   },
   "web/app/components/base/node-status/index.tsx": {
@@ -1560,11 +1531,6 @@
       "count": 8
     }
   },
-  "web/app/components/plugins/update-plugin/from-market-place.tsx": {
-    "shadcn/no-restyle": {
-      "count": 1
-    }
-  },
   "web/app/components/rag-pipeline/components/panel/input-field/editor/form/hidden-fields.tsx": {
     "eslint-react/static-components": {
       "count": 2
@@ -1765,11 +1731,6 @@
     }
   },
   "web/app/components/tools/edit-custom-collection-modal/test-api.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "web/app/components/tools/mcp/mcp-server-param-item.tsx": {
     "typescript/no-explicit-any": {
       "count": 1
     }
@@ -3279,7 +3240,7 @@
   },
   "web/service/use-plugins.ts": {
     "@tanstack/query/prefer-query-options": {
-      "count": 11
+      "count": 10
     },
     "dify/require-disable-directive-description": {
       "count": 1

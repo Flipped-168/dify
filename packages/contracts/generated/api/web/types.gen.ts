@@ -42,6 +42,11 @@ export type AgentThought = {
   tool_labels: AnyJsonValue
 }
 
+export type AgentVersionNotFoundError = ErrorResponse & {
+  code: 'agent_version_not_found_error'
+  status: 404
+}
+
 export type AnyJsonValue = unknown
 
 export type AppAccessModeQuery = {
@@ -143,6 +148,11 @@ export type CompletionRequestError = ErrorResponse & {
   status: 400
 }
 
+export type ConversationFirstMessageNotFoundError = ErrorResponse & {
+  code: 'conversation_first_message_not_found'
+  status: 404
+}
+
 export type ConversationInfiniteScrollPagination = {
   data: Array<SimpleConversation>
   has_more: boolean
@@ -154,6 +164,11 @@ export type ConversationListQuery = {
   limit?: number
   pinned?: boolean | null
   sort_by?: '-created_at' | '-updated_at' | 'created_at' | 'updated_at'
+}
+
+export type ConversationNotFoundError = ErrorResponse & {
+  code: 'conversation_not_found'
+  status: 404
 }
 
 export type ConversationRenamePayload = (
@@ -414,6 +429,22 @@ export type JsonValueType = unknown
 
 export type JsonValue = unknown
 
+export type KnowledgeFsCitation = {
+  artifact_hash: string
+  control_space_id: string
+  document_asset_id: string
+  document_title?: string | null
+  document_version?: number | null
+  end_offset?: number | null
+  id: string
+  node_id: string
+  page_number?: number | null
+  parse_artifact_id?: string | null
+  section_path?: Array<string>
+  space_name: string
+  start_offset?: number | null
+}
+
 export type LicenseStatus = 'active' | 'expired' | 'expiring' | 'inactive' | 'lost' | 'none'
 
 export type LicenseStatusModel = {
@@ -443,6 +474,11 @@ export type MalformedUploadTokenError = ErrorResponse & {
 export type MessageFeedbackPayload = {
   content?: string | null
   rating?: 'dislike' | 'like' | null
+}
+
+export type MessageFeedbackRatingRequiredError = ErrorResponse & {
+  code: 'message_feedback_rating_required'
+  status: 400
 }
 
 export type MessageFile = {
@@ -928,14 +964,18 @@ export type RetrieverResource = {
   doc_metadata?: {
     [key: string]: JsonValueType
   } | null
+  document_asset_id?: string | null
   document_id?: string | null
   document_name?: string | null
+  document_revision?: number | null
+  document_version?: number | null
   files?: Array<{
     [key: string]: JsonValueType
   }> | null
   hit_count?: number | null
   id?: string
   index_node_hash?: string | null
+  knowledge_fs_citation?: KnowledgeFsCitation | null
   message_id?: string
   page?: number | null
   position: number
@@ -1509,7 +1549,8 @@ export type PostConversationsByCIdNameData = {
 export type PostConversationsByCIdNameErrors = {
   400: NotChatAppError | ErrorResponse
   401: ErrorResponse
-  404: ErrorResponse
+  404: ConversationFirstMessageNotFoundError | ConversationNotFoundError | ErrorResponse
+  422: ErrorResponse
   500: ErrorResponse
   default: ErrorResponse
 }
@@ -1920,7 +1961,7 @@ export type GetMessagesData = {
 }
 
 export type GetMessagesErrors = {
-  400: NotChatAppError | ErrorResponse
+  400: AppUnavailableError | NotChatAppError | ErrorResponse
   401: ErrorResponse
   404: ErrorResponse
   500: ErrorResponse
@@ -1948,8 +1989,9 @@ export type PostMessagesByMessageIdFeedbacksData = {
 }
 
 export type PostMessagesByMessageIdFeedbacksErrors = {
-  400: ErrorResponse
+  400: AppUnavailableError | MessageFeedbackRatingRequiredError | ErrorResponse
   401: ErrorResponse
+  403: ErrorResponse
   404: ErrorResponse
   500: ErrorResponse
   default: ErrorResponse
@@ -1978,6 +2020,7 @@ export type GetMessagesByMessageIdMoreLikeThisData = {
 
 export type GetMessagesByMessageIdMoreLikeThisErrors = {
   400:
+    | AppUnavailableError
     | CompletionRequestError
     | ModelCurrentlyNotSupportError
     | NotCompletionAppError
@@ -2012,6 +2055,7 @@ export type GetMessagesByMessageIdSuggestedQuestionsData = {
 
 export type GetMessagesByMessageIdSuggestedQuestionsErrors = {
   400:
+    | AppUnavailableError
     | CompletionRequestError
     | ModelCurrentlyNotSupportError
     | NotChatAppError
@@ -2020,7 +2064,7 @@ export type GetMessagesByMessageIdSuggestedQuestionsErrors = {
     | ErrorResponse
   401: ErrorResponse
   403: AppSuggestedQuestionsAfterAnswerDisabledError | ErrorResponse
-  404: ErrorResponse
+  404: AgentVersionNotFoundError | ErrorResponse
   500: ErrorResponse
   default: ErrorResponse
 }

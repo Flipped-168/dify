@@ -16,6 +16,10 @@ from sqlalchemy.orm import Session, SessionTransaction, sessionmaker
 from werkzeug.test import TestResponse
 
 from constants import HEADER_NAME_CSRF_TOKEN, HIDDEN_VALUE, UNKNOWN_VALUE
+from controllers.console.workspace.plugin import (
+    PluginFetchDynamicSelectOptionsApi,
+    PluginFetchDynamicSelectOptionsWithCredentialsApi,
+)
 from controllers.console.workspace.trigger_providers import (
     TriggerOAuthAuthorizeApi,
     TriggerOAuthCallbackApi,
@@ -29,7 +33,10 @@ from controllers.console.workspace.trigger_providers import (
     TriggerSubscriptionBuilderLogsApi,
     TriggerSubscriptionBuilderUpdateApi,
     TriggerSubscriptionBuilderVerifyApi,
+    TriggerSubscriptionDeleteApi,
     TriggerSubscriptionListApi,
+    TriggerSubscriptionUpdateApi,
+    TriggerSubscriptionVerifyApi,
 )
 from controllers.console.wraps import _is_setup_completed
 from core.entities.provider_entities import ProviderConfig, ProviderConfigType
@@ -234,6 +241,11 @@ def harness(
         login_manager.init_app(app)
         blueprint = Blueprint("console", __name__, url_prefix="/console/api")
         api = ExternalApi(blueprint)
+        api.add_resource(PluginFetchDynamicSelectOptionsApi, "/workspaces/current/plugin/parameters/dynamic-options")
+        api.add_resource(
+            PluginFetchDynamicSelectOptionsWithCredentialsApi,
+            "/workspaces/current/plugin/parameters/dynamic-options-with-credentials",
+        )
         api.add_resource(TriggerProviderListApi, "/workspaces/current/triggers")
         api.add_resource(TriggerProviderInfoApi, "/workspaces/current/trigger-provider/<path:provider>/info")
         api.add_resource(TriggerProviderIconApi, "/workspaces/current/trigger-provider/<path:provider>/icon")
@@ -257,6 +269,18 @@ def harness(
         )
         api.add_resource(TriggerSubscriptionBuilderLogsApi, f"{builder_path}/logs/<path:subscription_builder_id>")
         api.add_resource(TriggerSubscriptionBuilderBuildApi, f"{builder_path}/build/<path:subscription_builder_id>")
+        api.add_resource(
+            TriggerSubscriptionUpdateApi,
+            "/workspaces/current/trigger-provider/<path:subscription_id>/subscriptions/update",
+        )
+        api.add_resource(
+            TriggerSubscriptionDeleteApi,
+            "/workspaces/current/trigger-provider/<path:subscription_id>/subscriptions/delete",
+        )
+        api.add_resource(
+            TriggerSubscriptionVerifyApi,
+            "/workspaces/current/trigger-provider/<path:provider>/subscriptions/verify/<path:subscription_id>",
+        )
         app.register_blueprint(blueprint)
 
         with app.app_context():

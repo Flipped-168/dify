@@ -19,11 +19,11 @@ import { RiFileDownloadLine } from '@remixicon/react'
 import { useMutation } from '@tanstack/react-query'
 import { memo, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import DSLImportWarningDescription from '@/app/components/app/create-from-dsl-modal/dsl-import-warning-description'
-import { Uploader } from '@/app/components/app/create-from-dsl-modal/uploader'
 import { usePluginDependencies } from '@/app/components/workflow/plugin-dependency/hooks'
 import { toast } from '@/app/notifications'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
+import { Uploader } from '@/features/dsl-import/uploader'
+import DSLImportWarningDescription from '@/features/dsl-import/warning-description'
 import { DSLImportMode, DSLImportStatus } from '@/models/app'
 import { consoleQuery } from '@/service/console'
 import { fetchAppWorkflowDraft } from '@/service/workflow'
@@ -38,7 +38,7 @@ import {
 } from './update-dsl-modal.helpers'
 import { initialEdges, initialNodes } from './utils'
 
-type UpdateDSLModalProps = Pick<DialogProps, 'open' | 'onOpenChange'> & {
+type UpdateDSLModalProps = Pick<DialogProps, 'handle' | 'open' | 'onOpenChange'> & {
   children?: ReactNode
   appId: string
   appMode: AppDetailWithSite['mode']
@@ -47,6 +47,7 @@ type UpdateDSLModalProps = Pick<DialogProps, 'open' | 'onOpenChange'> & {
 }
 
 function UpdateDSLModal({
+  handle,
   open,
   onOpenChange,
   children,
@@ -203,6 +204,7 @@ function UpdateDSLModal({
   return (
     <Dialog
       actionsRef={actionsRef}
+      handle={handle}
       open={open}
       onOpenChange={(nextOpen, details) => {
         if (!nextOpen && isImporting && details.reason !== 'imperative-action') details.cancel()
